@@ -290,7 +290,7 @@ const TicketCard = ({ ticket, onCancel }) => (
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Amount</span>
-          <span className="font-bold text-indigo-600">${(ticket.totalAmount / 100).toFixed(2)}</span>
+          <span className="font-bold text-indigo-600">${ticket.totalAmount}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Payment</span>
