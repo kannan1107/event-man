@@ -119,6 +119,13 @@ export const appApi = createApi({
       invalidatesTags: ["user"],
     }),
 
+    checkBooking: builder.query({
+      query: (eventId) => ({
+        url: `/payments/check-booking/${eventId}`,
+        method: "GET",
+      }),
+    }),
+
     fetchTicket: builder.query({
       query: () => ({
         url: "/payments/tickets",
@@ -250,4 +257,5 @@ export const {
   useFetchAllTicketsQuery,
   useCancelTicketMutation,
   useRateEventMutation,
+  useCheckBookingQuery,
 } = appApi;
