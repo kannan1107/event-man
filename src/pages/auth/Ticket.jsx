@@ -258,6 +258,16 @@ const TicketCard = ({ ticket, onCancel }) => (
     <div className={`h-2 w-full ${(ticket.ticketType || '').toLowerCase() === 'vip' ? 'bg-gradient-to-r from-yellow-400 to-orange-400' : 'bg-gradient-to-r from-indigo-400 to-purple-500'}`}></div>
 
     <div className="p-4">
+      {/* Cancelled Event Banner */}
+      {ticket.status === 'cancelled' && (
+        <div className="mb-3 flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 rounded-lg px-3 py-2 text-sm font-medium">
+          <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          This event has been cancelled
+        </div>
+      )}
+
       {/* Event title + badges */}
       <div className="flex items-start justify-between mb-3">
         <h3 className="font-bold text-gray-800 text-base leading-tight flex-1 pr-2">{ticket.Title || ticket.name}</h3>
@@ -319,12 +329,14 @@ const TicketCard = ({ ticket, onCancel }) => (
         <span className={`text-xs font-semibold px-3 py-1 rounded-full ${statusColor(ticket.status)}`}>
           {(ticket.status || 'N/A').toUpperCase()}
         </span>
-        <button
-          onClick={() => onCancel(ticket)}
-          className="text-sm bg-red-50 text-red-500 border border-red-200 px-3 py-1 rounded-lg hover:bg-red-500 hover:text-white transition-colors font-medium"
-        >
-          Cancel
-        </button>
+        {ticket.status !== 'cancelled' && (
+          <button
+            onClick={() => onCancel(ticket)}
+            className="text-sm bg-red-50 text-red-500 border border-red-200 px-3 py-1 rounded-lg hover:bg-red-500 hover:text-white transition-colors font-medium"
+          >
+            Cancel
+          </button>
+        )}
       </div>
     </div>
   </div>
