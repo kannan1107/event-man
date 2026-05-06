@@ -270,7 +270,7 @@ const Home = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {currentEvents.map((event) => (
                         <div key={event._id || event.id} className="border border-purple-800/40 rounded-lg p-8 shadow relative cursor-pointer hover:shadow-xl transition" style={{ background: 'rgba(15,15,40,0.85)', backdropFilter: 'blur(8px)' }} onClick={() => navigate('/eventDetails', { state: { event } })}>
-                            {(user?.role === Roles.ADMIN || user?.role === Roles.ORGANIZER) && (
+                            {user?.role === Roles.ADMIN && (
                                 <div className="absolute top-2 right-2" onClick={(e) => e.stopPropagation()}>
                                     <div className="relative group">
                                         <button className="p-1 hover:bg-gray-100 rounded">
