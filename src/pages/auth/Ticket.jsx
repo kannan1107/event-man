@@ -244,7 +244,7 @@ const Ticket = () => {
   );
 };
 
-const TicketCard = ({ ticket, onCancel, showCancelledBy }) => (
+const TicketCard = ({ ticket, onCancel }) => (
   <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
     {/* Ticket top color bar */}
     <div className={`h-2 w-full ${(ticket.ticketType || '').toLowerCase() === 'vip' ? 'bg-gradient-to-r from-yellow-400 to-orange-400' : 'bg-gradient-to-r from-indigo-400 to-purple-500'}`}></div>
@@ -259,12 +259,20 @@ const TicketCard = ({ ticket, onCancel, showCancelledBy }) => (
             </svg>
             CANCELLED
           </div>
-          {showCancelledBy && (
+          {ticket.cancelledBy === 'user' && (
             <div className="bg-red-50 px-3 py-2 text-xs text-red-700 flex items-center gap-1.5">
               <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
               </svg>
               You cancelled this ticket
+            </div>
+          )}
+          {ticket.cancelledBy === 'admin' && (
+            <div className="bg-orange-50 px-3 py-2 text-xs text-orange-700 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              Cancelled by admin
             </div>
           )}
         </div>
@@ -378,7 +386,7 @@ const UserTicketView = ({ payments, onCancel }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {cancelled.map((ticket) => (
-              <TicketCard key={ticket._id} ticket={ticket} onCancel={onCancel} showCancelledBy />
+              <TicketCard key={ticket._id} ticket={ticket} onCancel={onCancel} />
             ))}
           </div>
         </div>
