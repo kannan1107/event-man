@@ -237,34 +237,36 @@ const Ticket = () => {
             <EmptyState />
           )
         ) : (
-          filteredPayments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {filteredPayments.map((ticket) => (
-                <TicketCard key={ticket._id} ticket={ticket} onCancel={handleCancel} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          )
+          <UserTicketView payments={filteredPayments} onCancel={handleCancel} />
         )}
       </div>
     </div>
   );
 };
 
-const TicketCard = ({ ticket, onCancel }) => (
+const TicketCard = ({ ticket, onCancel, showCancelledBy }) => (
   <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
     {/* Ticket top color bar */}
     <div className={`h-2 w-full ${(ticket.ticketType || '').toLowerCase() === 'vip' ? 'bg-gradient-to-r from-yellow-400 to-orange-400' : 'bg-gradient-to-r from-indigo-400 to-purple-500'}`}></div>
 
     <div className="p-4">
-      {/* Cancelled Event Banner */}
+      {/* Cancelled Banner */}
       {ticket.status === 'cancelled' && (
-        <div className="mb-3 flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 rounded-lg px-3 py-2 text-sm font-medium">
-          <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-          </svg>
-          This event has been cancelled
+        <div className="mb-3 rounded-lg overflow-hidden border border-red-200">
+          <div className="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 text-xs font-bold tracking-wide">
+            <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            CANCELLED
+          </div>
+          {showCancelledBy && (
+            <div className="bg-red-50 px-3 py-2 text-xs text-red-700 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+              You cancelled this ticket
+            </div>
+          )}
         </div>
       )}
 
@@ -341,6 +343,49 @@ const TicketCard = ({ ticket, onCancel }) => (
     </div>
   </div>
 );
+
+const UserTicketView = ({ payments, onCancel }) => {
+  const active = payments.filter((t) => t.status !== 'cancelled');
+  const cancelled = payments.filter((t) => t.status === 'cancelled');
+
+  if (payments.length === 0) return <EmptyState />;
+
+  return (
+    <div>
+      {active.length > 0 && (
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+            <h4 className="text-lg font-bold text-gray-700">Active Bookings</h4>
+            <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">{active.length}</span>
+            <div className="flex-1 h-px bg-gray-100"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {active.map((ticket) => (
+              <TicketCard key={ticket._id} ticket={ticket} onCancel={onCancel} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {cancelled.length > 0 && (
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>
+            <h4 className="text-lg font-bold text-gray-700">Cancelled Tickets</h4>
+            <span className="bg-red-100 text-red-600 text-xs font-semibold px-2 py-0.5 rounded-full">{cancelled.length}</span>
+            <div className="flex-1 h-px bg-red-100"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {cancelled.map((ticket) => (
+              <TicketCard key={ticket._id} ticket={ticket} onCancel={onCancel} showCancelledBy />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const EmptyState = () => (
   <div className="text-center py-20">
